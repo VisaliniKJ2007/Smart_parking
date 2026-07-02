@@ -1,0 +1,10 @@
+﻿flask
+pymongo
+pandas
+scikit-learn
+xgboost
+lightgbm
+pyjwt
+numpy
+flask-socketio
+python-socketio
