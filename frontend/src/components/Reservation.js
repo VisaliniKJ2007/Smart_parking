@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const SOCKET_URL = process.env.REACT_APP_BACKEND_URL || 'http://127.0.0.1:5000';
 
-export default function Reservation(){
+export default function Reservation({ user }){
   const [parkingLots, setParkingLots] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [selected, setSelected] = useState('');
@@ -18,11 +18,19 @@ export default function Reservation(){
     return () => socket.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (user?.email) {
+      const uid = localStorage.getItem('user_id') || userId;
+      setUserId(uid);
+      fetchReservations(uid);
+    }
+  }, [user, userId]);
+
   function fetchLots(){
     axios.get('/parking-lots').then(r=> setParkingLots(r.data)).catch(()=>{});
   }
-  function fetchReservations(){
-    const uid = localStorage.getItem('user_id') || userId;
+  function fetchReservations(uidOverride) {
+    const uid = uidOverride || localStorage.getItem('user_id') || userId;
     axios.get('/reservations', { params: { user_id: uid } }).then(r=> setReservations(r.data)).catch(()=>{});
   }
 
@@ -42,6 +50,7 @@ export default function Reservation(){
   return (
     <div style={{marginTop:12}}>
       <h4>Reserve Parking</h4>
+      {!user ? <div style={{ marginBottom: 8, color: '#b45309' }}>Sign in to make a reservation.</div> : null}
       <form onSubmit={reserve} style={{display:'flex', gap:8}}>
         <select value={selected} onChange={e=>setSelected(e.target.value)}>
           <option value="">--select--</option>

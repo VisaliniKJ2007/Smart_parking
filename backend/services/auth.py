@@ -4,7 +4,7 @@ import hmac
 import hashlib
 import json
 import base64
-from flask import current_app
+from flask import current_app, request
 
 
 def _base64url_encode(b: bytes) -> str:
@@ -62,3 +62,13 @@ def decode_token(token):
         return json.loads(payload_json)
     except Exception:
         return None
+
+
+def get_request_user():
+    auth_header = request.headers.get('Authorization', '')
+    if not auth_header.startswith('Bearer '):
+        return None
+    token = auth_header.split(' ', 1)[1].strip()
+    if not token:
+        return None
+    return decode_token(token)

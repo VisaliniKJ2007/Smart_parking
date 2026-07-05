@@ -4,8 +4,10 @@ import datetime
 
 try:
     from ..services.db import get_db
+    from ..services.auth import get_request_user
 except ImportError:
     from services.db import get_db
+    from services.auth import get_request_user
 
 try:
     from ..app import socketio
@@ -27,10 +29,15 @@ def _parse_object_id(value):
 @reservation_bp.route('/reserve', methods=['POST'])
 def reserve():
     data = request.get_json() or {}
-    user_id = data.get('user_id')
+    user_payload = get_request_user()
+    if not user_payload:
+        return jsonify({'error': 'unauthorized'}), 401
     parking_id = data.get('parking_id')
-    if not user_id or not parking_id:
-        return jsonify({'error': 'user_id and parking_id required'}), 400
+    if not parking_id:
+        return jsonify({'error': 'parking_id required'}), 400
+    user_id = user_payload.get('user_id') or data.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'user_id required'}), 400
     db = get_db()
     reservations = db.reservations
     now = datetime.datetime.utcnow()
@@ -47,10 +54,18 @@ def reserve():
 
 @reservation_bp.route('/reservation/<rid>', methods=['DELETE'])
 def cancel_reservation(rid):
+    user_payload = get_request_user()
+    if not user_payload:
+        return jsonify({'error': 'unauthorized'}), 401
     db = get_db()
     reservations = db.reservations
     query_id = _parse_object_id(rid)
     try:
+        current = reservations.find_one({'_id': query_id})
+        if not current:
+            return jsonify({'error': 'not found'}), 404
+        if current.get('user_id') != user_payload.get('user_id'):
+            return jsonify({'error': 'forbidden'}), 403
         res = reservations.update_one({'_id': query_id}, {'$set': {'status': 'cancelled'}})
         if res.matched_count == 0:
             return jsonify({'error': 'not found'}), 404
@@ -62,12 +77,12 @@ def cancel_reservation(rid):
 
 @reservation_bp.route('/reservations', methods=['GET'])
 def list_reservations():
+    user_payload = get_request_user()
+    if not user_payload:
+        return jsonify({'error': 'unauthorized'}), 401
     db = get_db()
     reservations = db.reservations
-    user_id = request.args.get('user_id')
-    q = {}
-    if user_id:
-        q['user_id'] = user_id
+    q = {'user_id': user_payload.get('user_id')}
     docs = []
     for r in reservations.find(q).sort('created_at', -1).limit(100):
         docs.append({

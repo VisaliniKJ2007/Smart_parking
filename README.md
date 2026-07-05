@@ -1,229 +1,267 @@
-# SmartPark AI: Real-Time Parking Availability Prediction and Recommendation System
+# 🚗 SmartPark AI - Intelligent Parking Management System
 
-## Overview
-
-SmartPark AI is an intelligent parking management system designed to predict parking availability and recommend the best parking location to drivers. The system uses machine learning techniques to forecast parking occupancy based on historical data and real-time conditions such as traffic and weather.
-
-By reducing the time spent searching for parking spaces, SmartPark AI helps decrease traffic congestion, fuel consumption, and carbon emissions.
+SmartPark AI is a full-stack intelligent parking management system that predicts parking availability using machine learning and helps users find, reserve, and manage parking spaces efficiently. The system combines a Flask backend, React frontend, MongoDB database, and a machine learning model to provide real-time parking recommendations.
 
 ---
 
-## Problem Statement
+## ✨ Features
 
-Finding parking in urban areas is time-consuming and contributes significantly to traffic congestion and environmental pollution. Drivers often spend several minutes searching for available parking spaces, leading to wasted fuel and increased stress.
-
-SmartPark AI addresses this problem by providing accurate parking availability predictions and intelligent parking recommendations.
-
----
-
-## Objectives
-
-* Predict parking slot availability using machine learning.
-* Recommend the best parking location based on distance and availability.
-* Display parking information on an interactive map.
-* Support dynamic pricing based on occupancy levels.
-* Improve parking utilization and reduce traffic congestion.
+- 🔐 User Authentication (Register & Login)
+- 🚗 Parking Availability Prediction using Machine Learning
+- 📍 Interactive Parking Map
+- 🅿️ Smart Parking Recommendations
+- 📅 Parking Slot Reservation
+- 📊 User Dashboard
+- 🤖 Trained ML Model (Scikit-learn)
+- 🔄 RESTful API Integration
+- 📱 Responsive User Interface
 
 ---
 
-## Features
+## 🛠️ Tech Stack
 
-### Machine Learning Prediction
+### Frontend
+- React.js
+- JavaScript
+- HTML5
+- CSS3
 
-* Predict future parking availability.
-* Analyze historical occupancy trends.
-* Support real-time prediction requests.
+### Backend
+- Flask
+- Flask-CORS
+- REST API
 
-### Parking Recommendation Engine
+### Machine Learning
+- Scikit-learn
+- Pandas
+- NumPy
+- Joblib
 
-* Recommend optimal parking locations.
-* Consider both distance and available spaces.
-* Reduce parking search time.
-
-### Interactive Map Visualization
-
-* Display parking locations on a map.
-* Show availability using color-coded markers:
-
-  * Green: Available
-  * Yellow: Limited Availability
-  * Red: Full
-
-### Dynamic Pricing
-
-* Adjust parking prices according to occupancy levels.
-* Encourage balanced parking distribution.
-
-### Reservation System
-
-* Allow users to reserve parking spaces.
-* Manage bookings and cancellations.
-
-### Admin Dashboard
-
-* Manage parking locations.
-* Monitor occupancy statistics.
-* View analytics and reports.
+### Database
+- MongoDB
 
 ---
 
-## Technology Stack
-
-| Component         | Technology                 |
-| ----------------- | -------------------------- |
-| Frontend          | React.js                   |
-| Backend           | Flask                      |
-| Machine Learning  | Scikit-learn               |
-| Database          | MongoDB                    |
-| Maps              | Leaflet.js + OpenStreetMap |
-| API Communication | REST API                   |
-| Data Processing   | Pandas, NumPy              |
-
----
-
-## System Architecture
-
-Parking Data Collection
-↓
-Machine Learning Model
-↓
-Prediction Engine
-↓
-Recommendation Engine
-↓
-Flask Backend API
-↓
-React Frontend
-↓
-Interactive Map Dashboard
-
----
-
-## Project Structure
+## 📂 Project Structure
 
 ```text
-smart-parking/
+Smart_Parking/
 │
 ├── backend/
 │   ├── app.py
 │   ├── train_model.py
 │   ├── model.pkl
-│   ├── requirements.txt
-│   └── data/
-│       └── parking_data.csv
+│   ├── routes/
+│   ├── services/
+│   ├── tests/
+│   └── requirements.txt
 │
 ├── frontend/
-│   ├── src/
 │   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── App.js
+│   │   └── ...
 │   └── package.json
 │
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## Installation
+## 🚀 Installation
 
-### Clone the Repository
-
-```bash
-git clone <repository-url>
-cd smart-parking
-```
-
-### Create a Virtual Environment
+### 1. Clone the Repository
 
 ```bash
-python -m venv venv
-```
-
-### Activate the Virtual Environment
-
-#### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-#### Linux / macOS
-
-```bash
-source venv/bin/activate
-```
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
+git clone https://github.com/VisaliniKJ2007/Smart_parking.git
+cd Smart_parking
 ```
 
 ---
 
-## Running the Project
+## Backend Setup
 
-### Train the Machine Learning Model
+Create a virtual environment.
+
+### Windows
 
 ```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### Linux/macOS
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install dependencies.
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+Train the machine learning model.
+
+```bash
+cd backend
 python train_model.py
 ```
 
-### Start the Flask Backend
+Run the backend server.
 
 ```bash
 python app.py
 ```
 
-The server will start on:
+Backend URL
 
-```text
+```
 http://127.0.0.1:5000
 ```
 
 ---
 
-## Example API Request
+## Frontend Setup
 
-```http
+Open a new terminal.
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Frontend URL
+
+```
+http://localhost:3000
+```
+
+---
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/register` | Register a new user |
+| POST | `/login` | Login user |
+
+### Prediction
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/predict` | Predict parking availability |
+
+Example
+
+```
 GET /predict?hour=10&day=1&traffic=60&weather=0
 ```
 
-### Example Response
+Sample Response
 
 ```json
 {
-  "predicted_available_slots": 35
+    "predicted_available_slots": 35
 }
+```
+
+### Reservation
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | `/reserve` | Reserve a parking slot |
+| DELETE | `/cancel` | Cancel reservation |
+
+---
+
+## Machine Learning Model
+
+The parking prediction model is trained using historical parking occupancy data.
+
+Features include:
+
+- Hour of the day
+- Day of the week
+- Traffic level
+- Weather condition
+
+Algorithm:
+
+- Random Forest Regressor (Scikit-learn)
+
+---
+
+## Screenshots
+
+You can add screenshots here.
+
+```
+Home Page
+
+Login
+
+Dashboard
+
+Parking Map
+
+Reservation Page
 ```
 
 ---
 
 ## Future Enhancements
 
-* Real-time parking sensor integration.
-* Computer vision-based vehicle detection using YOLO and OpenCV.
-* Electric vehicle charging station recommendations.
-* Event-based demand prediction.
-* Mobile application support.
-* Smart city integration.
+- Live parking sensor integration
+- Google Maps integration
+- GPS navigation
+- QR-code based parking access
+- Online payment gateway
+- Dynamic pricing
+- Admin analytics dashboard
+- Mobile application
+- Notification system
 
 ---
 
-## Expected Outcomes
+## Testing
 
-* Reduced parking search time.
-* Lower traffic congestion.
-* Reduced fuel consumption.
-* Improved parking space utilization.
-* Better user experience for drivers.
+Run backend tests.
+
+```bash
+cd backend
+pytest
+```
+
+---
+
+## Contributors
+
+**Visalini K**
+
+Computer Science Engineering (Cyber Security)
+
+Sri Eshwar College of Engineering
 
 ---
 
 ## License
 
-This project is intended for educational, research, and hackathon purposes.
+This project is developed for educational, research, and hackathon purposes.
 
 ---
 
-## Authors
+## Acknowledgements
 
-Developed as a hackathon project for intelligent urban mobility and smart city solutions.
+- Flask
+- React
+- Scikit-learn
+- MongoDB
+- OpenStreetMap

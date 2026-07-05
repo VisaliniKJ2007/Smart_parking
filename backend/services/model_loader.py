@@ -1,6 +1,9 @@
 import os
 import pickle
 
+import pandas as pd
+
+
 class ModelLoader:
     def __init__(self, model_path=None):
         self.model_path = model_path or os.path.join(os.path.dirname(__file__), '..', 'model.pkl')
@@ -16,7 +19,9 @@ class ModelLoader:
 
     def predict(self, features: dict):
         if self.model:
-            return int(self.model.predict([self._vectorize(features)])[0])
+            frame = pd.DataFrame([self._vectorize(features)])
+            frame.columns = ['hour', 'traffic']
+            return int(self.model.predict(frame)[0])
         hour = int(features.get('hour', 12))
         traffic = features.get('traffic', 'Medium')
         base = 50
@@ -27,4 +32,10 @@ class ModelLoader:
         return max(0, base)
 
     def _vectorize(self, features: dict):
-        return [int(features.get('hour', 12)), 0]
+        traffic_value = features.get('traffic', 'Medium')
+        traffic_score = 1
+        if str(traffic_value).lower() in ('medium', 'moderate'):
+            traffic_score = 2
+        elif str(traffic_value).lower() in ('high', 'heavy'):
+            traffic_score = 3
+        return {'hour': int(features.get('hour', 12)), 'traffic': traffic_score}

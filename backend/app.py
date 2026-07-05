@@ -1,4 +1,4 @@
-﻿from flask import Flask
+﻿from flask import Flask, jsonify
 from flask_socketio import SocketIO
 
 socketio = SocketIO(cors_allowed_origins='*', async_mode='threading')
@@ -32,6 +32,10 @@ def create_app():
     return app
 
 app = create_app()
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'ok'}), 200
 
 @socketio.on('connect')
 def handle_connect():
