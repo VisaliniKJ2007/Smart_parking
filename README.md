@@ -1,4 +1,4 @@
-# 🚗 SmartPark AI - Intelligent Parking Management System
+# 🚗 SmartPark - AI Intelligent Parking Management System
 
 SmartPark AI is a full-stack intelligent parking management system that predicts parking availability using machine learning and helps users find, reserve, and manage parking spaces efficiently. The system combines a Flask backend, React frontend, MongoDB database, and a machine learning model to provide real-time parking recommendations.
 
